@@ -1,0 +1,16 @@
+{
+  "applications": {
+    "1 Staging": {
+      "applicationId": "ZuZTwiLmjLLkDm4sh2gTjNpbQIT0YHoI0lhNnmi7"
+    },
+    "2 Test": {
+      "applicationId": "9gMCwQsaVruMX64kAVCKXVIDj2YvMEhHZ97js7P3"
+    },
+    "3 Main": {
+      "applicationId": "OSTQSiMml4v3sqc728fuNvjx9zs3DgnZZzutAj6W"
+    },
+    "_default": {
+      "link": "1 Staging"
+    }
+  }
+}

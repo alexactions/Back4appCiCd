@@ -1,0 +1,91 @@
+name: CI/CD Back4App Deploy
+
+on:
+  push:
+    branches:
+      - staging
+      - test
+      - main
+
+jobs:
+  checks:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Run ESLint
+        run: npm run lint
+
+      - name: Run Prettier
+        run: npx prettier --check .
+
+      - name: Run Build
+        run: npm run build
+
+      - name: Run Tests
+        run: npm test
+
+  deploy_staging:
+    if: github.ref == 'refs/heads/staging'
+    runs-on: ubuntu-latest
+    needs: checks
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Install B4A CLI
+        run: curl -s https://raw.githubusercontent.com/back4app/parse-cli/back4app/installer.sh | sudo /bin/bash
+
+      - name: Configure B4A CLI
+        run: |
+          mkdir -p ~/.back4app
+          echo "${{ secrets.B4A_ACCOUNT_KEY }}" > ~/.back4app/netrc
+          chmod 600 ~/.back4app/netrc
+
+      - name: Deploy to Staging App
+        run: b4a deploy ZuZTwiLmjLLkDm4sh2gTjNpbQIT0YHoI0lhNnmi7 --description "Deploy from GitHub Actions"
+
+  deploy_test:
+    if: github.ref == 'refs/heads/test'
+    runs-on: ubuntu-latest
+    needs: [checks, deploy_staging]
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Install B4A CLI
+        run: curl -s https://raw.githubusercontent.com/back4app/parse-cli/back4app/installer.sh | sudo /bin/bash
+
+      - name: Configure B4A CLI
+        run: |
+          mkdir -p ~/.back4app
+          echo "${{ secrets.B4A_ACCOUNT_KEY }}" > ~/.back4app/netrc
+          chmod 600 ~/.back4app/netrc
+
+      - name: Deploy to Test App
+        run: b4a deploy 9gMCwQsaVruMX64kAVCKXVIDj2YvMEhHZ97js7P3 --description "Deploy from GitHub Actions"
+
+  deploy_main:
+    if: github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    needs: [checks, deploy_staging, deploy_test]
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Install B4A CLI
+        run: curl -s https://raw.githubusercontent.com/back4app/parse-cli/back4app/installer.sh | sudo /bin/bash
+
+      - name: Configure B4A CLI
+        run: |
+          mkdir -p ~/.back4app
+          echo "${{ secrets.B4A_ACCOUNT_KEY }}" > ~/.back4app/netrc
+          chmod 600 ~/.back4app/netrc
+
+      - name: Deploy to Main App
+        run: b4a deploy OSTQSiMml4v3sqc728fuNvjx9zs3DgnZZzutAj6W --description "Deploy from GitHub Actions"

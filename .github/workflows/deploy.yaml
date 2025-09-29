@@ -50,7 +50,7 @@ jobs:
           chmod 600 ~/.back4app/netrc
 
       - name: Deploy to Staging App
-        run: b4a deploy ZuZTwiLmjLLkDm4sh2gTjNpbQIT0YHoI0lhNnmi7 --description "Deploy from GitHub Actions"
+        run: b4a deploy "1 Staging" --description "Deploy from GitHub Actions"
 
   deploy_test:
     if: github.ref == 'refs/heads/test'
@@ -69,7 +69,7 @@ jobs:
           chmod 600 ~/.back4app/netrc
 
       - name: Deploy to Test App
-        run: b4a deploy 9gMCwQsaVruMX64kAVCKXVIDj2YvMEhHZ97js7P3 --description "Deploy from GitHub Actions"
+        run: b4a deploy "2 Test" --description "Deploy from GitHub Actions"
 
   deploy_main:
     if: github.ref == 'refs/heads/main'
@@ -88,4 +88,4 @@ jobs:
           chmod 600 ~/.back4app/netrc
 
       - name: Deploy to Main App
-        run: b4a deploy OSTQSiMml4v3sqc728fuNvjx9zs3DgnZZzutAj6W --description "Deploy from GitHub Actions"
+        run: b4a deploy "3 Main" --description "Deploy from GitHub Actions"
